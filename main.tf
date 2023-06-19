@@ -1,22 +1,106 @@
-provider "aws" {
-  region = "us-east-1"
-  access_key = "AKIAQ7FCKRU5ZWPEWJMP"
-  secret_key = "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"
-}
+provider "aws" {}
 
-resource "aws_vpc" "dev-vpc" {
-  cidr_block = "10.0.0.0/16"
+variable "vpc_cidr_block" {}
+variable "subnet_cidr_block" {}
+variable "avail_zone" {}
+variable "env_prefix" {}
+variable "my_ip" {}
+variable "instance_type" {}
+
+resource "aws_vpc" "myapp-vpc" {
+  cidr_block = var.vpc_cidr_block
   tags = {
-    name = "dev-vpc"
+    Name = "${var.env_prefix}-vpc"
   }
 }
 
-resource "aws_subnet" "dev-subnet-1" {
-  vpc_id = aws_vpc.dev-vpc.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "us-east-1a"
+resource "aws_subnet" "myapp-subnet-1" {
+  vpc_id = aws_vpc.myapp-vpc.id
+  cidr_block = var.subnet_cidr_block
+  availability_zone = var.avail_zone
   tags = {
-    name = "dev-subnet-1"
+    Name = "${var.env_prefix}-subnet-1"
   }
+}
+
+resource "aws_route_table" "myapp-route-table" {
+  vpc_id = aws_vpc.myapp-vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.myapp-igw.id
+  }
+  tags = {
+    Name = "${var.env_prefix}-route-table"
+  }
+}
+
+resource "aws_internet_gateway" "myapp-igw" {
+  vpc_id = aws_vpc.myapp-vpc.id
+  tags = {
+    Name = "${var.env_prefix}-igw"
+  }
+}
+
+resource "aws_route_table_association" "a-rt-subnet" {
+  subnet_id = aws_subnet.myapp-subnet-1.id
+  route_table_id = aws_route_table.myapp-route-table.id
+}
+
+resource "aws_security_group" "myapp-sg" {
+  name = "myapp-sg"
+  vpc_id = aws_vpc.myapp-vpc.id
+
+  ingress  {
+    from_port   = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = [var.my_ip]
+  }
+
+   ingress  {
+    from_port   = 8080
+    to_port = 8080
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.env_prefix}-sg"
+  }
+}
+
+data "aws_ami" "latest_ubuntu_image" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/*ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"]  # Canonical account ID
+}
+output "aws_ami" {
+  value = data.aws_ami.latest_ubuntu_image.id
+}
+
+resource "aws_instance" "myapp-server" {
+  ami = data.aws_ami.latest_ubuntu_image.id
+  instance_type = var.instance_type
+  subnet_id = aws_subnet.myapp-subnet-1.id
+  vpc_security_group_ids = [aws_security_group.myapp-sg.id]
+  availability_zone = var.avail_zone
+  associate_public_ip_address = true
 }
 
