@@ -1,3 +1,15 @@
+# Remote Storage for Terraform state
+
+terraform {
+  required_version = ">=0.12"
+  backend "s3" {
+    bucket = "myapp-bucket"
+    key = "myapp/state.tf"
+    region = "us-east-1"
+    profile = "myuser"
+  }
+}
+
 provider "aws" {}
 
 # vpc
