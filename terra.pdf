@@ -1,0 +1,98 @@
+digraph {
+	compound = "true"
+	newrank = "true"
+	subgraph "root" {
+		"[root] aws_vpc.myapp-vpc (expand)" [label = "aws_vpc.myapp-vpc", shape = "box"]
+		"[root] module.subnet_module.aws_internet_gateway.myapp-igw (expand)" [label = "module.subnet_module.aws_internet_gateway.myapp-igw", shape = "box"]
+		"[root] module.subnet_module.aws_route_table.myapp-route-table (expand)" [label = "module.subnet_module.aws_route_table.myapp-route-table", shape = "box"]
+		"[root] module.subnet_module.aws_route_table_association.a-rt-subnet (expand)" [label = "module.subnet_module.aws_route_table_association.a-rt-subnet", shape = "box"]
+		"[root] module.subnet_module.aws_subnet.myapp-subnet-1 (expand)" [label = "module.subnet_module.aws_subnet.myapp-subnet-1", shape = "box"]
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" [label = "module.webserver_module.aws_instance.myapp-server", shape = "box"]
+		"[root] module.webserver_module.aws_key_pair.server-key (expand)" [label = "module.webserver_module.aws_key_pair.server-key", shape = "box"]
+		"[root] module.webserver_module.aws_security_group.myapp-sg (expand)" [label = "module.webserver_module.aws_security_group.myapp-sg", shape = "box"]
+		"[root] module.webserver_module.data.aws_ami.latest_ubuntu_image (expand)" [label = "module.webserver_module.data.aws_ami.latest_ubuntu_image", shape = "box"]
+		"[root] provider[\"registry.terraform.io/hashicorp/aws\"]" [label = "provider[\"registry.terraform.io/hashicorp/aws\"]", shape = "diamond"]
+		"[root] var.avail_zone" [label = "var.avail_zone", shape = "note"]
+		"[root] var.env_prefix" [label = "var.env_prefix", shape = "note"]
+		"[root] var.image_name" [label = "var.image_name", shape = "note"]
+		"[root] var.image_owner" [label = "var.image_owner", shape = "note"]
+		"[root] var.instance_type" [label = "var.instance_type", shape = "note"]
+		"[root] var.my_ip" [label = "var.my_ip", shape = "note"]
+		"[root] var.private_key_location" [label = "var.private_key_location", shape = "note"]
+		"[root] var.public_key_location" [label = "var.public_key_location", shape = "note"]
+		"[root] var.subnet_cidr_block" [label = "var.subnet_cidr_block", shape = "note"]
+		"[root] var.vpc_cidr_block" [label = "var.vpc_cidr_block", shape = "note"]
+		"[root] aws_vpc.myapp-vpc (expand)" -> "[root] provider[\"registry.terraform.io/hashicorp/aws\"]"
+		"[root] aws_vpc.myapp-vpc (expand)" -> "[root] var.env_prefix"
+		"[root] aws_vpc.myapp-vpc (expand)" -> "[root] var.vpc_cidr_block"
+		"[root] module.subnet_module (close)" -> "[root] module.subnet_module.aws_route_table_association.a-rt-subnet (expand)"
+		"[root] module.subnet_module (close)" -> "[root] module.subnet_module.output.subnet_id (expand)"
+		"[root] module.subnet_module.aws_internet_gateway.myapp-igw (expand)" -> "[root] module.subnet_module.var.env_prefix (expand)"
+		"[root] module.subnet_module.aws_internet_gateway.myapp-igw (expand)" -> "[root] module.subnet_module.var.vpc_id (expand)"
+		"[root] module.subnet_module.aws_route_table.myapp-route-table (expand)" -> "[root] module.subnet_module.aws_internet_gateway.myapp-igw (expand)"
+		"[root] module.subnet_module.aws_route_table_association.a-rt-subnet (expand)" -> "[root] module.subnet_module.aws_route_table.myapp-route-table (expand)"
+		"[root] module.subnet_module.aws_route_table_association.a-rt-subnet (expand)" -> "[root] module.subnet_module.aws_subnet.myapp-subnet-1 (expand)"
+		"[root] module.subnet_module.aws_subnet.myapp-subnet-1 (expand)" -> "[root] module.subnet_module.var.avail_zone (expand)"
+		"[root] module.subnet_module.aws_subnet.myapp-subnet-1 (expand)" -> "[root] module.subnet_module.var.env_prefix (expand)"
+		"[root] module.subnet_module.aws_subnet.myapp-subnet-1 (expand)" -> "[root] module.subnet_module.var.subnet_cidr_block (expand)"
+		"[root] module.subnet_module.aws_subnet.myapp-subnet-1 (expand)" -> "[root] module.subnet_module.var.vpc_id (expand)"
+		"[root] module.subnet_module.output.subnet_id (expand)" -> "[root] module.subnet_module.aws_subnet.myapp-subnet-1 (expand)"
+		"[root] module.subnet_module.var.avail_zone (expand)" -> "[root] module.subnet_module (expand)"
+		"[root] module.subnet_module.var.avail_zone (expand)" -> "[root] var.avail_zone"
+		"[root] module.subnet_module.var.env_prefix (expand)" -> "[root] module.subnet_module (expand)"
+		"[root] module.subnet_module.var.env_prefix (expand)" -> "[root] var.env_prefix"
+		"[root] module.subnet_module.var.subnet_cidr_block (expand)" -> "[root] module.subnet_module (expand)"
+		"[root] module.subnet_module.var.subnet_cidr_block (expand)" -> "[root] var.subnet_cidr_block"
+		"[root] module.subnet_module.var.vpc_id (expand)" -> "[root] aws_vpc.myapp-vpc (expand)"
+		"[root] module.subnet_module.var.vpc_id (expand)" -> "[root] module.subnet_module (expand)"
+		"[root] module.webserver_module (close)" -> "[root] module.webserver_module.output.image_id (expand)"
+		"[root] module.webserver_module (close)" -> "[root] module.webserver_module.output.server_public_ip (expand)"
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" -> "[root] module.webserver_module.aws_key_pair.server-key (expand)"
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" -> "[root] module.webserver_module.aws_security_group.myapp-sg (expand)"
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" -> "[root] module.webserver_module.data.aws_ami.latest_ubuntu_image (expand)"
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" -> "[root] module.webserver_module.var.avail_zone (expand)"
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" -> "[root] module.webserver_module.var.instance_type (expand)"
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" -> "[root] module.webserver_module.var.private_key_location (expand)"
+		"[root] module.webserver_module.aws_instance.myapp-server (expand)" -> "[root] module.webserver_module.var.subnet_id (expand)"
+		"[root] module.webserver_module.aws_key_pair.server-key (expand)" -> "[root] module.webserver_module.var.public_key_location (expand)"
+		"[root] module.webserver_module.aws_key_pair.server-key (expand)" -> "[root] provider[\"registry.terraform.io/hashicorp/aws\"]"
+		"[root] module.webserver_module.aws_security_group.myapp-sg (expand)" -> "[root] module.webserver_module.var.env_prefix (expand)"
+		"[root] module.webserver_module.aws_security_group.myapp-sg (expand)" -> "[root] module.webserver_module.var.my_ip (expand)"
+		"[root] module.webserver_module.aws_security_group.myapp-sg (expand)" -> "[root] module.webserver_module.var.vpc_id (expand)"
+		"[root] module.webserver_module.data.aws_ami.latest_ubuntu_image (expand)" -> "[root] module.webserver_module.var.image_name (expand)"
+		"[root] module.webserver_module.data.aws_ami.latest_ubuntu_image (expand)" -> "[root] module.webserver_module.var.image_owner (expand)"
+		"[root] module.webserver_module.data.aws_ami.latest_ubuntu_image (expand)" -> "[root] provider[\"registry.terraform.io/hashicorp/aws\"]"
+		"[root] module.webserver_module.output.image_id (expand)" -> "[root] module.webserver_module.data.aws_ami.latest_ubuntu_image (expand)"
+		"[root] module.webserver_module.output.server_public_ip (expand)" -> "[root] module.webserver_module.aws_instance.myapp-server (expand)"
+		"[root] module.webserver_module.var.avail_zone (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.avail_zone (expand)" -> "[root] var.avail_zone"
+		"[root] module.webserver_module.var.env_prefix (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.env_prefix (expand)" -> "[root] var.env_prefix"
+		"[root] module.webserver_module.var.image_name (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.image_name (expand)" -> "[root] var.image_name"
+		"[root] module.webserver_module.var.image_owner (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.image_owner (expand)" -> "[root] var.image_owner"
+		"[root] module.webserver_module.var.instance_type (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.instance_type (expand)" -> "[root] var.instance_type"
+		"[root] module.webserver_module.var.my_ip (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.my_ip (expand)" -> "[root] var.my_ip"
+		"[root] module.webserver_module.var.private_key_location (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.private_key_location (expand)" -> "[root] var.private_key_location"
+		"[root] module.webserver_module.var.public_key_location (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.public_key_location (expand)" -> "[root] var.public_key_location"
+		"[root] module.webserver_module.var.subnet_id (expand)" -> "[root] module.subnet_module.output.subnet_id (expand)"
+		"[root] module.webserver_module.var.subnet_id (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] module.webserver_module.var.vpc_id (expand)" -> "[root] aws_vpc.myapp-vpc (expand)"
+		"[root] module.webserver_module.var.vpc_id (expand)" -> "[root] module.webserver_module (expand)"
+		"[root] output.aws_ami (expand)" -> "[root] module.webserver_module.output.image_id (expand)"
+		"[root] output.ec2_public_ip (expand)" -> "[root] module.webserver_module.output.server_public_ip (expand)"
+		"[root] provider[\"registry.terraform.io/hashicorp/aws\"] (close)" -> "[root] module.subnet_module.aws_route_table_association.a-rt-subnet (expand)"
+		"[root] provider[\"registry.terraform.io/hashicorp/aws\"] (close)" -> "[root] module.webserver_module.aws_instance.myapp-server (expand)"
+		"[root] root" -> "[root] module.subnet_module (close)"
+		"[root] root" -> "[root] module.webserver_module (close)"
+		"[root] root" -> "[root] output.aws_ami (expand)"
+		"[root] root" -> "[root] output.ec2_public_ip (expand)"
+		"[root] root" -> "[root] provider[\"registry.terraform.io/hashicorp/aws\"] (close)"
+	}
+}
+
